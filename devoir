@@ -1,0 +1,73 @@
+Pour répondre à cette tâche, je vais d'abord créer les tables en utilisant le modèle relationnel que vous avez fourni. Ensuite, je vais appliquer les modifications demandées sur les tables existantes.
+
+Étape 1 : Créer les tables selon le modèle relationnel
+En se basant sur l'image du modèle relationnel et des types de données fournis, voici les instructions SQL pour créer les tables avec les types de données et les contraintes correspondantes.
+
+Création des tables
+sql
+Copier le code
+-- Table CLIENT
+CREATE TABLE CLIENT (
+    id_client INT PRIMARY KEY,
+    nom_client VARCHAR(100) NOT NULL,
+    prenom_client VARCHAR(100),
+    adresse_client VARCHAR(255),
+    email_client VARCHAR(100),
+    tel_client VARCHAR(20)
+);
+
+-- Table PRODUIT
+CREATE TABLE PRODUIT (
+    id_produit INT PRIMARY KEY,
+    nom_produit VARCHAR(100) NOT NULL,
+    prix_produit DECIMAL(10, 2),
+    stock_produit INT,
+    categorie_produit VARCHAR(50)
+);
+
+-- Table COMMANDE
+CREATE TABLE COMMANDE (
+    id_commande INT PRIMARY KEY,
+    id_client INT,
+    date_commande DATE DEFAULT SYSDATE,
+    FOREIGN KEY (id_client) REFERENCES CLIENT(id_client)
+);
+
+-- Table DETAIL_COMMANDE
+CREATE TABLE DETAIL_COMMANDE (
+    id_commande INT,
+    id_produit INT,
+    quantite INT,
+    prix_unitaire DECIMAL(10, 2),
+    PRIMARY KEY (id_commande, id_produit),
+    FOREIGN KEY (id_commande) REFERENCES COMMANDE(id_commande),
+    FOREIGN KEY (id_produit) REFERENCES PRODUIT(id_produit)
+);
+Étape 2 : Modifier les tables existantes en ajoutant les nouvelles colonnes
+1. Ajouter une colonne Catégorie à la table PRODUIT
+La table PRODUIT doit avoir une nouvelle colonne appelée Catégorie avec un type VARCHAR2(20). Si vous utilisez Oracle ou une base de données similaire, vous pouvez utiliser la commande suivante pour ajouter la colonne :
+
+sql
+Copier le code
+ALTER TABLE PRODUIT
+ADD (categorie VARCHAR2(20));
+2. Ajouter une colonne Date de commande à la table COMMANDE avec SYSDATE comme valeur par défaut
+La table COMMANDE doit avoir une nouvelle colonne date_commande de type DATE, et la valeur par défaut doit être SYSDATE (qui est la date et l'heure actuelles). Voici la commande pour ajouter cette colonne :
+
+sql
+Copier le code
+ALTER TABLE COMMANDE
+ADD (date_commande DATE DEFAULT SYSDATE);
+Explication des commandes :
+Création des tables :
+
+CLIENT : La table contient des informations sur les clients (id_client, nom, prénom, adresse, email, téléphone). La clé primaire est id_client.
+PRODUIT : La table contient des informations sur les produits (id_produit, nom, prix, stock, catégorie). La clé primaire est id_produit.
+COMMANDE : La table contient des informations sur les commandes passées par les clients. Elle référence la table CLIENT via la clé étrangère id_client. La clé primaire est id_commande, et la colonne date_commande est définie avec SYSDATE comme valeur par défaut.
+DETAIL_COMMANDE : La table fait la liaison entre les produits et les commandes (un produit peut apparaître dans plusieurs commandes). Elle contient les clés étrangères id_commande et id_produit, formant une clé primaire composite.
+Modifications des tables :
+
+Ajout de la colonne categorie à PRODUIT : La nouvelle colonne categorie est ajoutée pour stocker le type de produit (par exemple, électronique, vêtements, etc.).
+Ajout de la colonne date_commande à COMMANDE : Cette colonne enregistre la date de la commande, avec SYSDATE comme valeur par défaut. Cela permet de capturer la date de création de la commande automatiquement lors de l'insertion.
+Conclusion :
+Ces commandes SQL vous permettent de créer le modèle relationnel basé sur le schéma que vous avez fourni et d'ajouter les colonnes demandées à vos tables existantes. N'oubliez pas d'exécuter ces commandes dans un environnement SQL compatible (par exemple, MySQL, Oracle, PostgreSQL, etc.), et assurez-vous que les types de données sont compatibles avec votre base de données (par exemple, VARCHAR2 pour Oracle, VARCHAR pour MySQL/PostgreSQL).
